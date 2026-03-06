@@ -9,8 +9,12 @@ def index():
     return "Welcome to My Development Journal API!"
 
 @app.route('/extra')
-def entries():
+def extra():
     return "It's extra page"
+
+@app.route('/a=<int:a>&b=<int:b>')
+def add(a, b):
+    return f"You entered the numbers: {a} + {b} = {a + b}"
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
