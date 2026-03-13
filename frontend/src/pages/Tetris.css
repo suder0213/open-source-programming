@@ -1,0 +1,185 @@
+.tetris-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: #0f0f0f;
+  color: #f0f0f0;
+  position: relative;
+}
+
+.tetris-layout {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+/* ── Board ── */
+
+.tetris-board {
+  display: grid;
+  grid-template-columns: repeat(10, 26px);
+  grid-template-rows: repeat(20, 26px);
+  gap: 1px;
+  padding: 3px;
+  background: #111;
+  border: 2px solid #2a2a2a;
+  border-radius: 4px;
+  position: relative; /* for overlay */
+}
+
+/* ── Cell ── */
+
+.t-cell {
+  width: 26px;
+  height: 26px;
+  background: #111;
+  border: 1px solid #1c1c1c;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.t-cell.filled {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 2px 2px 0 rgba(255,255,255,0.15), inset -1px -1px 0 rgba(0,0,0,0.4);
+}
+
+.t-cell.ghost {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px dashed #333;
+  box-shadow: none;
+}
+
+/* ── Board overlay (pause / game over) ── */
+
+.board-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-radius: 2px;
+  z-index: 5;
+}
+
+.board-overlay p {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #fff;
+  margin: 0;
+}
+
+.board-overlay .t-btn {
+  width: 130px;
+}
+
+/* ── Side panel ── */
+
+.tetris-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 120px;
+}
+
+.panel-box {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+}
+
+.panel-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #555;
+  margin: 0 0 0.3rem;
+  text-transform: uppercase;
+}
+
+.panel-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Next piece preview ── */
+
+.next-grid {
+  display: grid;
+  gap: 1px;
+}
+
+.next-grid .t-cell {
+  width: 22px;
+  height: 22px;
+}
+
+/* ── Buttons ── */
+
+.t-btn {
+  width: 100%;
+  padding: 0.55rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.t-btn:active { transform: scale(0.97); }
+
+.t-btn.primary {
+  background: #4f46e5;
+  color: #fff;
+}
+.t-btn.primary:hover { filter: brightness(1.2); }
+
+.t-btn.secondary {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+.t-btn.secondary:hover { filter: brightness(1.3); }
+
+/* ── Controls hint ── */
+
+.controls-hint {
+  font-size: 0.7rem;
+  color: #444;
+  line-height: 1.9;
+}
+
+.controls-hint p { margin: 0; }
+
+/* ── Back button ── */
+
+.back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: none;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.back-btn:hover {
+  border-color: #777;
+  color: #fff;
+}
