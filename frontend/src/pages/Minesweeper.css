@@ -1,0 +1,189 @@
+.ms-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 3rem;
+  background: #0f0f0f;
+  color: #f0f0f0;
+  position: relative;
+}
+
+/* ── Header ── */
+
+.ms-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.ms-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem;
+}
+
+.ms-difficulty {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.diff-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.diff-btn:hover {
+  border-color: #666;
+  color: #fff;
+}
+
+.diff-btn.active {
+  background: #2a2a2a;
+  border-color: #888;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── Status bar ── */
+
+.ms-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 0.5rem 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ms-stat {
+  min-width: 70px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ms-reset {
+  background: none;
+  border: 1px solid #333;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0.1rem 0.5rem;
+  line-height: 1;
+  transition: border-color 0.15s;
+}
+
+.ms-reset:hover {
+  border-color: #888;
+}
+
+/* ── Banner ── */
+
+.ms-banner {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.ms-banner.won  { background: #14532d; color: #86efac; }
+.ms-banner.lost { background: #7f1d1d; color: #fca5a5; }
+
+/* ── Board ── */
+
+.ms-board {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 2px;
+  background: #111;
+  border: 2px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 4px;
+  user-select: none;
+}
+
+/* ── Cell ── */
+
+.ms-cell {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: background 0.08s;
+}
+
+.ms-cell.hidden {
+  background: #2a2a2a;
+}
+
+.ms-cell.hidden:hover:not(:disabled) {
+  background: #3a3a3a;
+}
+
+.ms-cell.hidden:active:not(:disabled) {
+  background: #444;
+}
+
+.ms-cell.revealed {
+  background: #181818;
+  cursor: default;
+}
+
+.ms-cell.mine {
+  background: #3b0000;
+}
+
+.ms-cell.exploded {
+  background: #ef4444;
+}
+
+/* Back button (reuse from GameStub) */
+.back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: none;
+  border: 1px solid #333;
+  color: #aaa;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.back-btn:hover {
+  border-color: #777;
+  color: #fff;
+}
+
+/* Smaller cells on hard mode so the board fits the screen */
+@media (max-width: 768px) {
+  .ms-cell {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+  }
+}
