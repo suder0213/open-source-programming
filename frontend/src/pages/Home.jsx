@@ -49,7 +49,7 @@ export default function Home() {
     // Remove bubble after animation ends
     setTimeout(() => {
       setBubbles((prev) => prev.filter((b) => b.id !== id));
-    }, 3000);
+    }, 8000);
   }
 
   return (
