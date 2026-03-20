@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
@@ -27,6 +28,29 @@ const games = [
 
 export default function Home() {
   const navigate = useNavigate();
+  const [input, setInput] = useState("");
+  const [bubbles, setBubbles] = useState([]);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const res = await fetch("/api/echo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input }),
+    });
+    const data = await res.json();
+
+    const id = Date.now();
+    setBubbles((prev) => [...prev, { id, text: data.text, x: data.x, y: data.y }]);
+    setInput("");
+
+    // Remove bubble after animation ends
+    setTimeout(() => {
+      setBubbles((prev) => prev.filter((b) => b.id !== id));
+    }, 3000);
+  }
 
   return (
     <div className="home">
@@ -48,6 +72,27 @@ export default function Home() {
           </button>
         ))}
       </div>
+
+      <form className="echo-form" onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Say something..."
+        />
+        <button type="submit">Send</button>
+      </form>
+
+      {bubbles.map((b) => (
+        <div
+          key={b.id}
+          role="status"
+          className="bubble"
+          style={{ left: `${b.x}%`, bottom: `${b.y}%` }}
+        >
+          {b.text}
+        </div>
+      ))}
     </div>
   );
 }

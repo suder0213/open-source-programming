@@ -77,3 +77,63 @@
   margin: 0;
   line-height: 1.5;
 }
+
+/* ── Echo chat bar ────────────────────────────────────────────────────────── */
+
+.echo-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.echo-form input {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid #333;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  font-size: 1rem;
+  outline: none;
+}
+
+.echo-form input:focus {
+  border-color: #666;
+}
+
+.echo-form button {
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: #f0f0f0;
+  color: #0f0f0f;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.echo-form button:hover {
+  background: #ffffff;
+}
+
+/* ── Speech bubble ────────────────────────────────────────────────────────── */
+
+@keyframes rise {
+  0%   { transform: translateY(0);    opacity: 1; }
+  100% { transform: translateY(-80vh); opacity: 0; }
+}
+
+.bubble {
+  position: fixed;
+  background: #ffffff;
+  color: #0f0f0f;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: rise 3s ease-out forwards;
+}

@@ -58,6 +58,25 @@ SUITS = ["♠", "♥", "♦", "♣"]
 RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
 
+# ── Echo ──────────────────────────────────────────────────────────────────────
+
+class EchoRequest(BaseModel):
+    text: str
+
+    def model_post_init(self, __context):
+        if not self.text:
+            raise ValueError("text must not be empty")
+
+
+@app.post("/api/echo")
+def echo(req: EchoRequest):
+    return {
+        "text": req.text,
+        "x": random.randint(0, 100),
+        "y": random.randint(0, 80),
+    }
+
+
 @app.get("/api/blackjack/new-deck")
 def blackjack_new_deck():
     deck = [{"suit": s, "rank": r} for s in SUITS for r in RANKS]
