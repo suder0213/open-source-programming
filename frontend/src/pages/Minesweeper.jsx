@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchMinePositions } from "../api/gameApi";
 import "./Minesweeper.css";
 
 // ── Constants ─────────────────────────────────────────────────────────────
@@ -75,21 +76,6 @@ function checkWin(board) {
   return board.every(row => row.every(cell => cell.isMine || cell.isRevealed));
 }
 
-// Client-side mine generator (fallback when backend is unreachable)
-function generateMinesLocally(rows, cols, mineCount, firstR, firstC) {
-  const safe = new Set();
-  for (let dr = -1; dr <= 1; dr++)
-    for (let dc = -1; dc <= 1; dc++) {
-      const nr = firstR + dr, nc = firstC + dc;
-      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) safe.add(`${nr},${nc}`);
-    }
-  const candidates = [];
-  for (let r = 0; r < rows; r++)
-    for (let c = 0; c < cols; c++)
-      if (!safe.has(`${r},${c}`)) candidates.push([r, c]);
-  return candidates.sort(() => Math.random() - 0.5).slice(0, mineCount);
-}
-
 // ── Component ─────────────────────────────────────────────────────────────
 
 export default function Minesweeper() {
@@ -127,19 +113,10 @@ export default function Minesweeper() {
     // First click — fetch mines from backend then reveal
     if (gameState === "idle") {
       setGameState("playing");
-      let mines;
-      try {
-        const res = await fetch("/api/minesweeper/new-game", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ difficulty, first_row: r, first_col: c }),
-        });
-        const data = await res.json();
-        mines = data.mines;
-      } catch {
-        const { rows, cols, mineCount } = DIFFICULTIES[difficulty];
-        mines = generateMinesLocally(rows, cols, mineCount, r, c);
-      }
+      const { rows, cols, mineCount } = DIFFICULTIES[difficulty];
+      const mines = await fetchMinePositions({
+        difficulty, rows, cols, mineCount, firstRow: r, firstCol: c,
+      });
 
       setBoard(prev => {
         const planted = plantMines(prev, mines);

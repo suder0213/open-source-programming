@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchDeck } from "../api/gameApi";
 import "./Blackjack.css";
 
 // ── Card helpers ───────────────────────────────────────────────────────────
@@ -28,14 +29,6 @@ function handTotal(cards) {
 
 function isBlackjack(cards) {
   return cards.length === 2 && handTotal(cards) === 21;
-}
-
-// Generate a local shuffled deck (fallback if backend unreachable)
-function localDeck() {
-  const suits = ["♠", "♥", "♦", "♣"];
-  const ranks = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
-  const deck = suits.flatMap(suit => ranks.map(rank => ({ suit, rank })));
-  return deck.sort(() => Math.random() - 0.5);
 }
 
 // ── Sub-components ─────────────────────────────────────────────────────────
@@ -102,14 +95,7 @@ export default function Blackjack() {
 
   const dealNewGame = useCallback(async () => {
     setLoading(true);
-    let freshDeck;
-    try {
-      const res = await fetch("/api/blackjack/new-deck");
-      const data = await res.json();
-      freshDeck = data.deck;
-    } catch {
-      freshDeck = localDeck();
-    }
+    const freshDeck = await fetchDeck();
 
     // Deal: player, dealer, player, dealer
     const [p1, d1] = draw(freshDeck);
