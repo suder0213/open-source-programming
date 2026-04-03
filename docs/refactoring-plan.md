@@ -138,56 +138,26 @@ def new_deck():
 
 ---
 
-## Phase 3 — Tetris 백엔드 접점 추가
+## Phase 3 — Frontend API 호출 중앙화
 
-**해소하는 냄새:** #5 No Backend Contract
-**해소하는 SOLID 위반:** D (잠재적 위반 사전 차단)
-
-### 작업 목록
-
-**3-1.** `backend/services/tetris.py` 생성
-- `record_score(score: int, lines: int, level: int) -> dict` 함수 작성
-- 현재는 단순히 입력값을 반환 (DB 없음). 이후 DB 연동 시 이 함수만 수정하면 됨
-
-**3-2.** `backend/routers/tetris.py` 생성
-- `POST /score` 핸들러 작성
-- 요청 모델: `{ score: int, lines: int, level: int }`
-- 응답: `{ received: true, score: int }`
-
-**3-3.** `main.py`에 tetris 라우터 등록
-
-**3-4.** `frontend/src/pages/Tetris.jsx` 수정
-- 게임 종료(`gameState === "over"`) 시 `POST /api/tetris/score` 호출 추가
-- 실패해도 게임 화면에 영향 없도록 비동기 처리
-
-### 검증
-- 게임 종료 시 네트워크 탭에서 요청 확인
-- 백엔드 로그에서 수신 확인
-
----
-
-## Phase 4 — Frontend API 호출 중앙화
-
-**해소하는 냄새:** #3, #5 (프론트엔드 측)
+**해소하는 냄새:** #3 (프론트엔드 측)
 **해소하는 SOLID 위반:** D (컴포넌트가 fetch 구현에 직접 의존하는 구조 해소)
 
 ### 작업 목록
 
-**4-1.** `frontend/src/api/gameApi.js` 생성
+**3-1.** `frontend/src/api/gameApi.js` 생성
 - 현재 각 컴포넌트 안에 흩어진 `fetch` 호출을 이 파일로 이동
 - 로컬 fallback 로직도 여기에 포함
 
 ```js
 // gameApi.js가 담당할 함수들
-export async function fetchDeck()                     // Blackjack
-export async function fetchMinePositions(opts)        // Minesweeper
-export async function submitTetrisScore(score)        // Tetris
+export async function fetchDeck()              // Blackjack
+export async function fetchMinePositions(opts) // Minesweeper
 ```
 
-**4-2.** 각 컴포넌트 수정
+**3-2.** 각 컴포넌트 수정
 - `Blackjack.jsx`: `dealNewGame` 안의 fetch 로직 → `fetchDeck()` 호출로 교체
 - `Minesweeper.jsx`: `handleCellClick` 안의 fetch 로직 → `fetchMinePositions()` 호출로 교체
-- `Tetris.jsx`: 게임 오버 시 `submitTetrisScore()` 호출
 
 ### 이점
 - API URL, 에러 처리, fallback을 한 곳에서 관리
@@ -200,9 +170,8 @@ export async function submitTetrisScore(score)        // Tetris
 
 ```
 Phase 1 (Router 분리)
-    └── Phase 2 (Service Layer)   ← Phase 1 완료 후 진행
-            └── Phase 3 (Tetris 접점)  ← Phase 2 완료 후 진행
-                    └── Phase 4 (Frontend API 중앙화)  ← Phase 3 완료 후 진행
+    └── Phase 2 (Service Layer)        ← Phase 1 완료 후 진행
+            └── Phase 3 (Frontend API 중앙화)  ← Phase 2 완료 후 진행
 ```
 
 각 Phase는 독립적으로 검증 가능하며, 이전 Phase 없이 다음으로 넘어가지 않는다.
@@ -211,9 +180,12 @@ Phase 1 (Router 분리)
 
 ## 리팩토링 원칙
 
-- **동작을 바꾸지 않는다.** 각 Phase는 기존 엔드포인트의 입출력을 그대로 유지한다.
+- **동작을 바꾸지 않는다.** 각 Phase는 기존 엔드포인트의 입출력을 그대로 유지한다. 새 엔드포인트 추가나 새 기능 도입은 리팩토링이 아니므로 이 계획에 포함하지 않는다.
 - **테스트를 먼저 확인한다.** Phase 완료 후 반드시 기존 테스트를 돌려 회귀를 확인한다.
 - **한 번에 하나씩.** 여러 Phase를 동시에 진행하지 않는다.
+
+> **범위 밖 (Out of Scope)**
+> `code-smells.md`의 #5 (No Backend Contract — Tetris 점수 엔드포인트 추가)는 새로운 기능 추가에 해당하므로 이 리팩토링 계획에 포함하지 않는다. 별도의 기능 개발 계획으로 다뤄야 한다.
 
 ---
 
@@ -221,8 +193,7 @@ Phase 1 (Router 분리)
 
 | 항목 | Before | After |
 |---|---|---|
-| 백엔드 파일 수 | 1 (`main.py`) | 9 (main + 4 routers + 4 services) |
+| 백엔드 파일 수 | 1 (`main.py`) | 8 (main + 3 routers + 3 services) |
 | 새 게임 추가 시 수정 파일 | `main.py` 전체 | `main.py` 1줄 + 새 파일 2개 |
 | 비즈니스 로직 테스트 | 불가 (핸들러에 묶임) | 가능 (서비스 단독 호출) |
-| 테트리스 백엔드 접점 | 없음 | `POST /api/tetris/score` |
 | 프론트엔드 fetch 위치 | 컴포넌트 내부 | `api/gameApi.js` 한 곳 |
