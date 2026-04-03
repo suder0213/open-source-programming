@@ -1,7 +1,6 @@
-import random
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from routers import blackjack, minesweeper, echo
 
 app = FastAPI(title="Game Hub API")
 
@@ -18,67 +17,8 @@ def root():
     return {"message": "Game Hub API is running"}
 
 
-# ── Minesweeper ───────────────────────────────────────────────────────────────
-
-DIFFICULTIES = {
-    "easy":   {"rows": 9,  "cols": 9,  "mine_count": 10},
-    "medium": {"rows": 16, "cols": 16, "mine_count": 40},
-    "hard":   {"rows": 16, "cols": 30, "mine_count": 99},
-}
-
-
-class NewGameRequest(BaseModel):
-    difficulty: str   # "easy" | "medium" | "hard"
-    first_row: int
-    first_col: int
-
-
-@app.post("/api/minesweeper/new-game")
-def minesweeper_new_game(req: NewGameRequest):
-    config = DIFFICULTIES.get(req.difficulty, DIFFICULTIES["easy"])
-    rows, cols, mine_count = config["rows"], config["cols"], config["mine_count"]
-
-    # Keep a 3×3 area around the first click mine-free
-    safe = {
-        (req.first_row + dr, req.first_col + dc)
-        for dr in range(-1, 2)
-        for dc in range(-1, 2)
-        if 0 <= req.first_row + dr < rows and 0 <= req.first_col + dc < cols
-    }
-
-    candidates = [(r, c) for r in range(rows) for c in range(cols) if (r, c) not in safe]
-    mines = random.sample(candidates, min(mine_count, len(candidates)))
-
-    return {"rows": rows, "cols": cols, "mines": mines}
-
-
-# ── Blackjack ─────────────────────────────────────────────────────────────────
-
-SUITS = ["♠", "♥", "♦", "♣"]
-RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
-
-
-# ── Echo ──────────────────────────────────────────────────────────────────────
-
-class EchoRequest(BaseModel):
-    text: str
-
-    def model_post_init(self, __context):
-        if not self.text:
-            raise ValueError("text must not be empty")
-
-
-@app.post("/api/echo")
-def echo(req: EchoRequest):
-    return {
-        "text": req.text,
-        "x": random.randint(0, 100),
-        "y": random.randint(0, 80),
-    }
-
-
-@app.get("/api/blackjack/new-deck")
-def blackjack_new_deck():
-    deck = [{"suit": s, "rank": r} for s in SUITS for r in RANKS]
-    random.shuffle(deck)
-    return {"deck": deck}
+api = APIRouter(prefix="/api")
+api.include_router(blackjack.router, prefix="/blackjack")
+api.include_router(minesweeper.router, prefix="/minesweeper")
+api.include_router(echo.router)
+app.include_router(api)

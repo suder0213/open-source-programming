@@ -32,12 +32,10 @@ backend/
 ├── routers/
 │   ├── blackjack.py     ← HTTP 라우팅 + 요청/응답 모델
 │   ├── minesweeper.py
-│   ├── tetris.py        ← 신규: score 엔드포인트
 │   └── echo.py
 ├── services/
 │   ├── blackjack.py     ← 순수 비즈니스 로직 (덱 생성)
-│   ├── minesweeper.py   ← 순수 비즈니스 로직 (지뢰 생성)
-│   └── tetris.py        ← 신규: 점수 처리 로직
+│   └── minesweeper.py   ← 순수 비즈니스 로직 (지뢰 생성)
 ├── requirements.txt
 └── tests/
     ├── test_echo.py
@@ -51,7 +49,7 @@ frontend/src/
 ├── pages/
 │   ├── Blackjack.jsx    ← UI + 게임 로직만
 │   ├── Minesweeper.jsx
-│   └── Tetris.jsx       ← score 제출 접점 추가
+│   └── Tetris.jsx       ← 변경 없음
 ```
 
 ---
