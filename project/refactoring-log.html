@@ -1,0 +1,601 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Routers" href="../api/routers.html"><link rel="prev" title="Refactoring Plan — Game Hub" href="refactoring-plan.html">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>Refactoring Log — Game Hub - Game Hub 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Game Hub 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Game Hub 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Project Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="requirement.html">Project Requirement Document</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-smells.html">Code Smells — Game Hub</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refactoring-plan.html">Refactoring Plan — Game Hub</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Refactoring Log — Game Hub</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/routers.html">Routers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/services.html">Services</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/project/refactoring-log.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="refactoring-log-game-hub">
+<h1>Refactoring Log — Game Hub<a class="headerlink" href="#refactoring-log-game-hub" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">refactoring-plan.md</span></code>에 따라 수행한 리팩토링의 전 과정, 이유, 결과를 기록한 문서입니다.</p>
+<ul class="simple">
+<li><p><strong>수행 일자:</strong> 2026-04-03</p></li>
+<li><p><strong>기준 문서:</strong> <code class="docutils literal notranslate"><span class="pre">docs/code-smells.md</span></code>, <code class="docutils literal notranslate"><span class="pre">docs/refactoring-plan.md</span></code></p></li>
+<li><p><strong>원칙:</strong> 외부 동작(엔드포인트 입출력)을 변경하지 않고 내부 구조만 개선한다.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="id1">
+<h2>리팩토링 전 구조<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>backend/
+└── main.py              ← 모든 로직이 한 파일에 집중
+
+frontend/src/
+└── pages/
+    ├── Blackjack.jsx    ← fetch 호출 + 게임 로직 혼재
+    └── Minesweeper.jsx  ← fetch 호출 + 게임 로직 혼재
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">main.py</span></code> 한 파일이 앱 초기화, 미들웨어 설정, 게임별 상수, 요청 모델, 비즈니스 로직, 라우트 핸들러를 모두 소유하고 있었다. 각 게임 간 경계는 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">──</span> <span class="pre">Blackjack</span> <span class="pre">──</span></code> 형태의 장식성 주석으로만 표시되었으며, 코드 수준에서 강제되지 않았다.</p>
+</section>
+<hr class="docutils" />
+<section id="phase-1-backend-router">
+<h2>Phase 1 — Backend Router 분리<a class="headerlink" href="#phase-1-backend-router" title="Link to this heading">¶</a></h2>
+<section id="id2">
+<h3>이유<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">code-smells.md</span></code> #1 (God File), #2 (Comment-as-Structure), #4 (Closed to Extension)를 해소한다.</p>
+<ul class="simple">
+<li><p><strong>SRP 위반 해소:</strong> <code class="docutils literal notranslate"><span class="pre">main.py</span></code>가 여러 책임을 동시에 지는 구조를 끊는다.</p></li>
+<li><p><strong>OCP 위반 해소:</strong> 새 게임 추가 시 <code class="docutils literal notranslate"><span class="pre">main.py</span></code>를 직접 수정하지 않아도 되는 구조를 만든다.</p></li>
+<li><p><strong>주석 경계 제거:</strong> 주석 대신 파일 분리 자체가 게임 간 경계를 나타내도록 한다.</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>수행한 작업<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p><strong>1. <code class="docutils literal notranslate"><span class="pre">backend/routers/</span></code> 디렉토리 생성</strong></p>
+<p>각 게임의 라우팅 책임을 독립 파일로 분리하기 위한 패키지를 만들었다.</p>
+<p><strong>2. <code class="docutils literal notranslate"><span class="pre">routers/blackjack.py</span></code> 생성</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">main.py</span></code>에 있던 <code class="docutils literal notranslate"><span class="pre">SUITS</span></code>, <code class="docutils literal notranslate"><span class="pre">RANKS</span></code> 상수와 <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/new-deck</span></code> 핸들러를 이 파일로 이동했다. <code class="docutils literal notranslate"><span class="pre">APIRouter</span></code> 인스턴스를 생성하고 핸들러를 등록했다.</p>
+<p><strong>3. <code class="docutils literal notranslate"><span class="pre">routers/minesweeper.py</span></code> 생성</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">main.py</span></code>에 있던 <code class="docutils literal notranslate"><span class="pre">DIFFICULTIES</span></code> 상수, <code class="docutils literal notranslate"><span class="pre">NewGameRequest</span></code> Pydantic 모델, <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/new-game</span></code> 핸들러를 이 파일로 이동했다.</p>
+<p><strong>4. <code class="docutils literal notranslate"><span class="pre">routers/echo.py</span></code> 생성</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">EchoRequest</span></code> 모델과 <code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/echo</span></code> 핸들러를 이 파일로 이동했다.</p>
+<p><strong>5. <code class="docutils literal notranslate"><span class="pre">main.py</span></code> 정리 — 중간 라우터 도입</strong></p>
+<p>초기에는 각 라우터를 <code class="docutils literal notranslate"><span class="pre">prefix=&quot;/api/blackjack&quot;</span></code> 형태로 개별 등록했다. 이후 <code class="docutils literal notranslate"><span class="pre">/api</span></code> prefix가 모든 라우터에 반복된다는 문제를 발견하여, 중간 <code class="docutils literal notranslate"><span class="pre">APIRouter(prefix=&quot;/api&quot;)</span></code>를 도입해 <code class="docutils literal notranslate"><span class="pre">/api</span></code>를 단 한 곳에서 선언하도록 개선했다.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 최종 main.py</span>
+<span class="n">api</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/api&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">blackjack</span><span class="o">.</span><span class="n">router</span><span class="p">,</span>   <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/blackjack&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">minesweeper</span><span class="o">.</span><span class="n">router</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;/minesweeper&quot;</span><span class="p">)</span>
+<span class="n">api</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">echo</span><span class="o">.</span><span class="n">router</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">api</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h3>검증<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>기존 테스트 <code class="docutils literal notranslate"><span class="pre">tests/test_echo.py</span></code> 5개 전부 통과 확인.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">5</span> <span class="n">passed</span> <span class="ow">in</span> <span class="mf">0.62</span><span class="n">s</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="phase-2-service-layer">
+<h2>Phase 2 — Service Layer 도입<a class="headerlink" href="#phase-2-service-layer" title="Link to this heading">¶</a></h2>
+<section id="id5">
+<h3>이유<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">code-smells.md</span></code> #3 (Missing Service Layer)를 해소한다.</p>
+<ul class="simple">
+<li><p><strong>SRP 위반 해소 (라우터):</strong> Phase 1 이후에도 라우터 핸들러가 입력 파싱과 비즈니스 로직을 동시에 수행하고 있었다. 라우터는 HTTP 계층만 담당해야 한다.</p></li>
+<li><p><strong>DIP 위반 해소:</strong> 핸들러가 <code class="docutils literal notranslate"><span class="pre">random.sample</span></code>, <code class="docutils literal notranslate"><span class="pre">DIFFICULTIES</span></code> 딕셔너리 등 구체적인 구현에 직접 의존하는 구조를 끊는다. 서비스 함수라는 추상화 레이어를 통해 로직을 교체하거나 단독 테스트할 수 있게 된다.</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>수행한 작업<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<p><strong>1. <code class="docutils literal notranslate"><span class="pre">backend/services/</span></code> 디렉토리 생성</strong></p>
+<p>비즈니스 로직 전용 패키지를 만들었다.</p>
+<p><strong>2. <code class="docutils literal notranslate"><span class="pre">services/blackjack.py</span></code> 생성</strong></p>
+<p>덱 생성·셔플 로직을 <code class="docutils literal notranslate"><span class="pre">generate_deck()</span> <span class="pre">-&gt;</span> <span class="pre">list[dict]</span></code> 순수 함수로 추출했다. <code class="docutils literal notranslate"><span class="pre">SUITS</span></code>, <code class="docutils literal notranslate"><span class="pre">RANKS</span></code> 상수도 함께 이동했다. 이 함수는 FastAPI에 의존하지 않으며, HTTP 컨텍스트 없이 단독으로 테스트할 수 있다.</p>
+<p><strong>3. <code class="docutils literal notranslate"><span class="pre">services/minesweeper.py</span></code> 생성</strong></p>
+<p>지뢰 배치·safe zone 계산 로직을 <code class="docutils literal notranslate"><span class="pre">generate_mines(rows,</span> <span class="pre">cols,</span> <span class="pre">mine_count,</span> <span class="pre">first_row,</span> <span class="pre">first_col)</span> <span class="pre">-&gt;</span> <span class="pre">list[tuple]</span></code> 순수 함수로 추출했다. <code class="docutils literal notranslate"><span class="pre">DIFFICULTIES</span></code> 상수도 이 파일로 이동했다.</p>
+<p><strong>4. 라우터 핸들러 단순화</strong></p>
+<p>라우터 핸들러는 요청 파싱 → 서비스 호출 → 응답 반환만 수행하도록 줄였다.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># routers/blackjack.py — Phase 2 이후</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/new-deck&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">new_deck</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;deck&quot;</span><span class="p">:</span> <span class="n">blackjack_service</span><span class="o">.</span><span class="n">generate_deck</span><span class="p">()}</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># routers/minesweeper.py — Phase 2 이후</span>
+<span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/new-game&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">new_game</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">NewGameRequest</span><span class="p">):</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">minesweeper_service</span><span class="o">.</span><span class="n">DIFFICULTIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">difficulty</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="n">mines</span> <span class="o">=</span> <span class="n">minesweeper_service</span><span class="o">.</span><span class="n">generate_mines</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">mine_count</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="n">rows</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="n">cols</span><span class="p">,</span> <span class="s2">&quot;mines&quot;</span><span class="p">:</span> <span class="n">mines</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>5. 서비스 단위 테스트 작성</strong></p>
+<p>서비스 레이어 분리의 핵심 목적인 “로직을 단독으로 테스트한다”를 실증하기 위해 테스트를 추가했다. HTTP 요청 없이 서비스 함수만 직접 호출한다.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/test_blackjack.py</span></code> — 4개 테스트</p>
+<ul>
+<li><p>덱이 52장인지</p></li>
+<li><p>중복 카드가 없는지</p></li>
+<li><p>모든 수트·랭크 조합이 존재하는지</p></li>
+<li><p>매번 다른 순서로 셔플되는지</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/test_minesweeper.py</span></code> — 4개 테스트</p>
+<ul>
+<li><p>난이도별 지뢰 개수가 정확한지</p></li>
+<li><p>safe zone(첫 클릭 3×3 영역) 안에 지뢰가 없는지</p></li>
+<li><p>모든 지뢰가 보드 범위 안에 있는지</p></li>
+<li><p>중복 지뢰가 없는지</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id7">
+<h3>검증<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<p>전체 테스트 13개 통과 확인. 기존 5개는 회귀 없음, 신규 8개 모두 통과.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">13</span> <span class="n">passed</span> <span class="ow">in</span> <span class="mf">0.95</span><span class="n">s</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="phase-3-frontend-api">
+<h2>Phase 3 — Frontend API 호출 중앙화<a class="headerlink" href="#phase-3-frontend-api" title="Link to this heading">¶</a></h2>
+<section id="id8">
+<h3>이유<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">code-smells.md</span></code> #3의 프론트엔드 측 문제를 해소한다.</p>
+<ul class="simple">
+<li><p><strong>DIP 잠재적 위반 해소:</strong> <code class="docutils literal notranslate"><span class="pre">Blackjack.jsx</span></code>와 <code class="docutils literal notranslate"><span class="pre">Minesweeper.jsx</span></code>가 각자 <code class="docutils literal notranslate"><span class="pre">fetch</span></code> 구현, 에러 처리, 로컬 fallback 로직을 내부에 직접 포함하고 있었다. API URL이 바뀌거나 에러 처리 방식이 달라지면 컴포넌트를 직접 열어야 했다.</p></li>
+<li><p><strong>중복 제거:</strong> 두 컴포넌트 모두 동일한 패턴(fetch → 실패 시 로컬 fallback)을 반복하고 있었다.</p></li>
+</ul>
+</section>
+<section id="id9">
+<h3>수행한 작업<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<p><strong>1. <code class="docutils literal notranslate"><span class="pre">frontend/src/api/gameApi.js</span></code> 생성</strong></p>
+<p>각 컴포넌트에 흩어진 <code class="docutils literal notranslate"><span class="pre">fetch</span></code> 호출, 에러 처리, 로컬 fallback 로직을 이 파일로 통합했다.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fetchDeck()</span></code> — <code class="docutils literal notranslate"><span class="pre">/api/blackjack/new-deck</span></code> 호출. 실패 시 로컬에서 덱을 생성해 반환.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fetchMinePositions(opts)</span></code> — <code class="docutils literal notranslate"><span class="pre">/api/minesweeper/new-game</span></code> 호출. 실패 시 로컬에서 지뢰를 생성해 반환.</p></li>
+<li><p>로컬 fallback 함수(<code class="docutils literal notranslate"><span class="pre">localDeck</span></code>, <code class="docutils literal notranslate"><span class="pre">localMines</span></code>)도 함께 이 파일로 이동.</p></li>
+</ul>
+<p><strong>2. <code class="docutils literal notranslate"><span class="pre">Blackjack.jsx</span></code> 수정</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">localDeck</span></code> 함수 제거, <code class="docutils literal notranslate"><span class="pre">dealNewGame</span></code> 안의 fetch + try/catch 블록을 <code class="docutils literal notranslate"><span class="pre">fetchDeck()</span></code> 한 줄로 교체했다. 컴포넌트는 이제 API 호출 방식을 알지 못한다.</p>
+<p><strong>3. <code class="docutils literal notranslate"><span class="pre">Minesweeper.jsx</span></code> 수정</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">generateMinesLocally</span></code> 함수 제거, <code class="docutils literal notranslate"><span class="pre">handleCellClick</span></code> 안의 fetch + try/catch 블록을 <code class="docutils literal notranslate"><span class="pre">fetchMinePositions(...)</span></code> 한 줄로 교체했다.</p>
+</section>
+<section id="id10">
+<h3>검증<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<p>프론트엔드 프로덕션 빌드 오류 없음 확인.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>✓ built in 302ms
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id11">
+<h2>최종 구조<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>backend/
+├── main.py              ← 앱 초기화 + APIRouter 등록만
+├── routers/
+│   ├── blackjack.py     ← HTTP 라우팅, 요청/응답 모델
+│   ├── minesweeper.py
+│   └── echo.py
+├── services/
+│   ├── blackjack.py     ← 순수 비즈니스 로직 (덱 생성)
+│   └── minesweeper.py   ← 순수 비즈니스 로직 (지뢰 생성)
+└── tests/
+    ├── test_blackjack.py
+    ├── test_echo.py
+    └── test_minesweeper.py
+
+frontend/src/
+├── api/
+│   └── gameApi.js       ← fetch 호출, 에러 처리, fallback 통합
+└── pages/
+    ├── Blackjack.jsx    ← UI + 게임 로직만
+    └── Minesweeper.jsx
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="code-smell-solid">
+<h2>해소된 Code Smell 및 SOLID 위반<a class="headerlink" href="#code-smell-solid" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>Code Smell</p></th>
+<th class="head"><p>해소 Phase</p></th>
+<th class="head"><p>해소된 SOLID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>God File</p></td>
+<td><p>Phase 1</p></td>
+<td><p>S</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Comment-as-Structure</p></td>
+<td><p>Phase 1</p></td>
+<td><p>S</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Missing Service Layer</p></td>
+<td><p>Phase 2, 3</p></td>
+<td><p>S, D</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Closed to Extension</p></td>
+<td><p>Phase 1</p></td>
+<td><p>O</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>No Backend Contract</p></td>
+<td><p>범위 밖 — 기능 추가에 해당</p></td>
+<td><p>—</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="id12">
+<h2>리팩토링 중 발견한 추가 개선 사항<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h2>
+<p><strong><code class="docutils literal notranslate"><span class="pre">/api</span></code> prefix 중복 문제</strong></p>
+<p>Phase 1 완료 후 <code class="docutils literal notranslate"><span class="pre">main.py</span></code>를 검토하는 과정에서 <code class="docutils literal notranslate"><span class="pre">/api</span></code>가 각 <code class="docutils literal notranslate"><span class="pre">include_router</span></code> 호출에 반복된다는 문제를 발견했다. 이는 계획에 없던 사항이었으나, 중간 <code class="docutils literal notranslate"><span class="pre">APIRouter(prefix=&quot;/api&quot;)</span></code>를 도입해 즉시 해소했다. 새 게임 추가 시 <code class="docutils literal notranslate"><span class="pre">/api</span></code> prefix를 다시 신경 쓸 필요가 없어졌다.</p>
+</section>
+<hr class="docutils" />
+<section id="id13">
+<h2>검증 결과 요약<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>시점</p></th>
+<th class="head"><p>테스트 수</p></th>
+<th class="head"><p>결과</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Phase 1 완료 후</p></td>
+<td><p>5</p></td>
+<td><p>5 passed</p></td>
+</tr>
+<tr class="row-odd"><td><p>Phase 2 완료 후</p></td>
+<td><p>13</p></td>
+<td><p>13 passed</p></td>
+</tr>
+<tr class="row-even"><td><p>Phase 3 완료 후</p></td>
+<td><p>13 + 빌드 확인</p></td>
+<td><p>13 passed, build ✓</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../api/routers.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Routers</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="refactoring-plan.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Refactoring Plan — Game Hub</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Refactoring Log — Game Hub</a><ul>
+<li><a class="reference internal" href="#id1">리팩토링 전 구조</a></li>
+<li><a class="reference internal" href="#phase-1-backend-router">Phase 1 — Backend Router 분리</a><ul>
+<li><a class="reference internal" href="#id2">이유</a></li>
+<li><a class="reference internal" href="#id3">수행한 작업</a></li>
+<li><a class="reference internal" href="#id4">검증</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#phase-2-service-layer">Phase 2 — Service Layer 도입</a><ul>
+<li><a class="reference internal" href="#id5">이유</a></li>
+<li><a class="reference internal" href="#id6">수행한 작업</a></li>
+<li><a class="reference internal" href="#id7">검증</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#phase-3-frontend-api">Phase 3 — Frontend API 호출 중앙화</a><ul>
+<li><a class="reference internal" href="#id8">이유</a></li>
+<li><a class="reference internal" href="#id9">수행한 작업</a></li>
+<li><a class="reference internal" href="#id10">검증</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id11">최종 구조</a></li>
+<li><a class="reference internal" href="#code-smell-solid">해소된 Code Smell 및 SOLID 위반</a></li>
+<li><a class="reference internal" href="#id12">리팩토링 중 발견한 추가 개선 사항</a></li>
+<li><a class="reference internal" href="#id13">검증 결과 요약</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>
