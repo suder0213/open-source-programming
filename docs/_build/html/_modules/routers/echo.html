@@ -233,7 +233,12 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for routers.echo</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span></span><span class="sd">&quot;&quot;&quot;Echo router module.</span>
+
+<span class="sd">Provides a simple echo endpoint used for testing and UI demonstrations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
@@ -243,19 +248,50 @@
 <div class="viewcode-block" id="EchoRequest">
 <a class="viewcode-back" href="../../api/routers.html#routers.echo.EchoRequest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EchoRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Request body for the echo endpoint.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        text (str): Non-empty string to be echoed back to the caller.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If ``text`` is an empty string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
 
-<div class="viewcode-block" id="EchoRequest.model_post_init">
-<a class="viewcode-back" href="../../api/routers.html#routers.echo.EchoRequest.model_post_init">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">model_post_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">__context</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;text must not be empty&quot;</span><span class="p">)</span></div>
-</div>
 
 
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/echo&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">echo</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">EchoRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Echo the submitted text back with a random spawn position.</span>
+
+<span class="sd">    Returns the original text alongside randomly generated ``x`` and ``y``</span>
+<span class="sd">    coordinates, which the frontend uses to position a floating bubble on screen.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        req (EchoRequest): Request body containing the text to echo.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A response object containing:</span>
+
+<span class="sd">            - **text** (str): The original text from the request.</span>
+<span class="sd">            - **x** (int): Random horizontal position in the range ``[0, 100]``.</span>
+<span class="sd">            - **y** (int): Random vertical position in the range ``[0, 80]``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        **Request**::</span>
+
+<span class="sd">            POST /api/echo</span>
+<span class="sd">            {&quot;text&quot;: &quot;hello&quot;}</span>
+
+<span class="sd">        **Response**::</span>
+
+<span class="sd">            {&quot;text&quot;: &quot;hello&quot;, &quot;x&quot;: 42, &quot;y&quot;: 17}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">req</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
         <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>

@@ -241,22 +241,61 @@
         <article role="main" id="furo-main-content">
           <section id="routers">
 <h1>Routers<a class="headerlink" href="#routers" title="Link to this heading">¶</a></h1>
-<p>각 게임의 HTTP 라우팅 계층입니다.
-요청 파싱과 응답 반환만 담당하며, 비즈니스 로직은 <code class="docutils literal notranslate"><span class="pre">services</span></code> 레이어에 위임합니다.</p>
+<p>HTTP routing layer for each game.
+Responsible only for request parsing and response formatting — business logic is delegated to the <code class="docutils literal notranslate"><span class="pre">services</span></code> layer.</p>
 <section id="module-routers.blackjack">
 <span id="blackjack"></span><h2>Blackjack<a class="headerlink" href="#module-routers.blackjack" title="Link to this heading">¶</a></h2>
+<p>Blackjack router module.</p>
+<p>Exposes HTTP endpoints for the Blackjack game.
+Delegates all business logic to <a class="reference internal" href="services.html#module-services.blackjack" title="services.blackjack"><code class="xref py py-mod docutils literal notranslate"><span class="pre">services.blackjack</span></code></a>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="routers.blackjack.new_deck">
 <span class="sig-prename descclassname"><span class="pre">routers.blackjack.</span></span><span class="sig-name descname"><span class="pre">new_deck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#routers.blackjack.new_deck" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a freshly shuffled 52-card deck.</p>
+<p>Calls <a class="reference internal" href="services.html#services.blackjack.generate_deck" title="services.blackjack.generate_deck"><code class="xref py py-func docutils literal notranslate"><span class="pre">services.blackjack.generate_deck()</span></code></a> and wraps the result
+in a JSON-serialisable response envelope.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>A response object containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>deck</strong> (list[dict]): 52 shuffled cards, each with <code class="docutils literal notranslate"><span class="pre">suit</span></code> and <code class="docutils literal notranslate"><span class="pre">rank</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p><strong>Request</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GET</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">blackjack</span><span class="o">/</span><span class="n">new</span><span class="o">-</span><span class="n">deck</span>
+</pre></div>
+</div>
+<p><strong>Response</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;deck&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;suit&quot;</span><span class="p">:</span> <span class="s2">&quot;♠&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="s2">&quot;A&quot;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;suit&quot;</span><span class="p">:</span> <span class="s2">&quot;♥&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="s2">&quot;7&quot;</span><span class="p">},</span>
+    <span class="o">...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </section>
 <section id="module-routers.minesweeper">
 <span id="minesweeper"></span><h2>Minesweeper<a class="headerlink" href="#module-routers.minesweeper" title="Link to this heading">¶</a></h2>
+<p>Minesweeper router module.</p>
+<p>Exposes HTTP endpoints for the Minesweeper game.
+Delegates mine-generation logic to <a class="reference internal" href="services.html#module-services.minesweeper" title="services.minesweeper"><code class="xref py py-mod docutils literal notranslate"><span class="pre">services.minesweeper</span></code></a>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="routers.minesweeper.NewGameRequest">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">routers.minesweeper.</span></span><span class="sig-name descname"><span class="pre">NewGameRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/routers/minesweeper.html#NewGameRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#routers.minesweeper.NewGameRequest" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Request body for starting a new Minesweeper game.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -270,69 +309,149 @@
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="routers.minesweeper.NewGameRequest.difficulty">
-<span class="sig-name descname"><span class="pre">difficulty</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.difficulty" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">difficulty</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.difficulty" title="Link to this definition">¶</a></dt>
+<dd><p>Game difficulty level. One of <code class="docutils literal notranslate"><span class="pre">&quot;easy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;medium&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;hard&quot;</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="routers.minesweeper.NewGameRequest.first_row">
-<span class="sig-name descname"><span class="pre">first_row</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.first_row" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">first_row</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.first_row" title="Link to this definition">¶</a></dt>
+<dd><p>Row index of the player’s first click (0-based).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="routers.minesweeper.NewGameRequest.first_col">
-<span class="sig-name descname"><span class="pre">first_col</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.first_col" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">first_col</span></span><a class="headerlink" href="#routers.minesweeper.NewGameRequest.first_col" title="Link to this definition">¶</a></dt>
+<dd><p>Column index of the player’s first click (0-based).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="routers.minesweeper.new_game">
 <span class="sig-prename descclassname"><span class="pre">routers.minesweeper.</span></span><span class="sig-name descname"><span class="pre">new_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#routers.minesweeper.new_game" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Generate a new Minesweeper board based on the requested difficulty.</p>
+<p>Looks up board dimensions and mine count from <code class="xref py py-data docutils literal notranslate"><span class="pre">services.minesweeper.DIFFICULTIES</span></code>,
+then delegates mine placement to <a class="reference internal" href="services.html#services.minesweeper.generate_mines" title="services.minesweeper.generate_mines"><code class="xref py py-func docutils literal notranslate"><span class="pre">services.minesweeper.generate_mines()</span></code></a>.
+If an unrecognised difficulty is supplied, it falls back to <code class="docutils literal notranslate"><span class="pre">&quot;easy&quot;</span></code>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>req</strong> (<a class="reference internal" href="#routers.minesweeper.NewGameRequest" title="routers.minesweeper.NewGameRequest"><em>NewGameRequest</em></a>)</p>
+<dd class="field-odd"><p><strong>req</strong> (<a class="reference internal" href="#routers.minesweeper.NewGameRequest" title="routers.minesweeper.NewGameRequest"><em>NewGameRequest</em></a>) – Difficulty level and the position of the first click.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A response object containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>rows</strong> (int): Number of rows on the board.</p></li>
+<li><p><strong>cols</strong> (int): Number of columns on the board.</p></li>
+<li><p><strong>mines</strong> (list[list[int]]): List of <code class="docutils literal notranslate"><span class="pre">[row,</span> <span class="pre">col]</span></code> mine positions.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><strong>Request</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">minesweeper</span><span class="o">/</span><span class="n">new</span><span class="o">-</span><span class="n">game</span>
+<span class="p">{</span><span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;easy&quot;</span><span class="p">,</span> <span class="s2">&quot;first_row&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;first_col&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s2">&quot;mines&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="o">...</span><span class="p">]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
 <section id="module-routers.echo">
 <span id="echo"></span><h2>Echo<a class="headerlink" href="#module-routers.echo" title="Link to this heading">¶</a></h2>
+<p>Echo router module.</p>
+<p>Provides a simple echo endpoint used for testing and UI demonstrations.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="routers.echo.EchoRequest">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">routers.echo.</span></span><span class="sig-name descname"><span class="pre">EchoRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/routers/echo.html#EchoRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#routers.echo.EchoRequest" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Request body for the echo endpoint.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="routers.echo.EchoRequest.text">
+<span class="sig-name descname"><span class="pre">text</span></span><a class="headerlink" href="#routers.echo.EchoRequest.text" title="Link to this definition">¶</a></dt>
+<dd><p>Non-empty string to be echoed back to the caller.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">text</span></code> is an empty string.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>args</strong> (<em>Any</em>)</p></li>
 <li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Any</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="routers.echo.EchoRequest.text">
-<span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#routers.echo.EchoRequest.text" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="routers.echo.EchoRequest.model_post_init">
-<span class="sig-name descname"><span class="pre">model_post_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_EchoRequest__context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/routers/echo.html#EchoRequest.model_post_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#routers.echo.EchoRequest.model_post_init" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="routers.echo.echo">
 <span class="sig-prename descclassname"><span class="pre">routers.echo.</span></span><span class="sig-name descname"><span class="pre">echo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">req</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#routers.echo.echo" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Echo the submitted text back with a random spawn position.</p>
+<p>Returns the original text alongside randomly generated <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>
+coordinates, which the frontend uses to position a floating bubble on screen.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>req</strong> (<a class="reference internal" href="#routers.echo.EchoRequest" title="routers.echo.EchoRequest"><em>EchoRequest</em></a>)</p>
+<dd class="field-odd"><p><strong>req</strong> (<a class="reference internal" href="#routers.echo.EchoRequest" title="routers.echo.EchoRequest"><em>EchoRequest</em></a>) – Request body containing the text to echo.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A response object containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>text</strong> (str): The original text from the request.</p></li>
+<li><p><strong>x</strong> (int): Random horizontal position in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">100]</span></code>.</p></li>
+<li><p><strong>y</strong> (int): Random vertical position in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">80]</span></code>.</p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><strong>Request</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">echo</span>
+<span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mi">17</span><span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -411,7 +530,6 @@
 <li><a class="reference internal" href="#module-routers.echo">Echo</a><ul>
 <li><a class="reference internal" href="#routers.echo.EchoRequest"><code class="docutils literal notranslate"><span class="pre">EchoRequest</span></code></a><ul>
 <li><a class="reference internal" href="#routers.echo.EchoRequest.text"><code class="docutils literal notranslate"><span class="pre">EchoRequest.text</span></code></a></li>
-<li><a class="reference internal" href="#routers.echo.EchoRequest.model_post_init"><code class="docutils literal notranslate"><span class="pre">EchoRequest.model_post_init()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#routers.echo.echo"><code class="docutils literal notranslate"><span class="pre">echo()</span></code></a></li>

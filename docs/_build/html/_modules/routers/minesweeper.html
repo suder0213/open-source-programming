@@ -233,7 +233,13 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for routers.minesweeper</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span>
+<span></span><span class="sd">&quot;&quot;&quot;Minesweeper router module.</span>
+
+<span class="sd">Exposes HTTP endpoints for the Minesweeper game.</span>
+<span class="sd">Delegates mine-generation logic to :mod:`services.minesweeper`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">services</span><span class="w"> </span><span class="kn">import</span> <span class="n">minesweeper</span> <span class="k">as</span> <span class="n">minesweeper_service</span>
 
@@ -243,7 +249,15 @@
 <div class="viewcode-block" id="NewGameRequest">
 <a class="viewcode-back" href="../../api/routers.html#routers.minesweeper.NewGameRequest">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NewGameRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">difficulty</span><span class="p">:</span> <span class="nb">str</span>   <span class="c1"># &quot;easy&quot; | &quot;medium&quot; | &quot;hard&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Request body for starting a new Minesweeper game.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        difficulty (str): Game difficulty level. One of ``&quot;easy&quot;``, ``&quot;medium&quot;``, or ``&quot;hard&quot;``.</span>
+<span class="sd">        first_row (int): Row index of the player&#39;s first click (0-based).</span>
+<span class="sd">        first_col (int): Column index of the player&#39;s first click (0-based).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">difficulty</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">first_row</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">first_col</span><span class="p">:</span> <span class="nb">int</span></div>
 
@@ -251,6 +265,32 @@
 
 <span class="nd">@router</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/new-game&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">new_game</span><span class="p">(</span><span class="n">req</span><span class="p">:</span> <span class="n">NewGameRequest</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a new Minesweeper board based on the requested difficulty.</span>
+
+<span class="sd">    Looks up board dimensions and mine count from :data:`services.minesweeper.DIFFICULTIES`,</span>
+<span class="sd">    then delegates mine placement to :func:`services.minesweeper.generate_mines`.</span>
+<span class="sd">    If an unrecognised difficulty is supplied, it falls back to ``&quot;easy&quot;``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        req (NewGameRequest): Difficulty level and the position of the first click.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A response object containing:</span>
+
+<span class="sd">            - **rows** (int): Number of rows on the board.</span>
+<span class="sd">            - **cols** (int): Number of columns on the board.</span>
+<span class="sd">            - **mines** (list[list[int]]): List of ``[row, col]`` mine positions.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        **Request**::</span>
+
+<span class="sd">            POST /api/minesweeper/new-game</span>
+<span class="sd">            {&quot;difficulty&quot;: &quot;easy&quot;, &quot;first_row&quot;: 4, &quot;first_col&quot;: 4}</span>
+
+<span class="sd">        **Response**::</span>
+
+<span class="sd">            {&quot;rows&quot;: 9, &quot;cols&quot;: 9, &quot;mines&quot;: [[0, 2], [3, 7], ...]}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">minesweeper_service</span><span class="o">.</span><span class="n">DIFFICULTIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">difficulty</span><span class="p">,</span> <span class="n">minesweeper_service</span><span class="o">.</span><span class="n">DIFFICULTIES</span><span class="p">[</span><span class="s2">&quot;easy&quot;</span><span class="p">])</span>
     <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">mine_count</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;cols&quot;</span><span class="p">],</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;mine_count&quot;</span><span class="p">]</span>
     <span class="n">mines</span> <span class="o">=</span> <span class="n">minesweeper_service</span><span class="o">.</span><span class="n">generate_mines</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">mine_count</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">first_row</span><span class="p">,</span> <span class="n">req</span><span class="o">.</span><span class="n">first_col</span><span class="p">)</span>

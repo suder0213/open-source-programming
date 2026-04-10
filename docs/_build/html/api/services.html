@@ -241,40 +241,82 @@
         <article role="main" id="furo-main-content">
           <section id="services">
 <h1>Services<a class="headerlink" href="#services" title="Link to this heading">¶</a></h1>
-<p>순수 비즈니스 로직 계층입니다.
-FastAPI에 의존하지 않으며, HTTP 컨텍스트 없이 단독으로 호출하거나 테스트할 수 있습니다.</p>
+<p>Pure business logic layer.
+No dependency on FastAPI — each function can be called and tested without an HTTP context.</p>
 <section id="module-services.blackjack">
 <span id="blackjack"></span><h2>Blackjack<a class="headerlink" href="#module-services.blackjack" title="Link to this heading">¶</a></h2>
+<p>Blackjack business logic module.</p>
+<p>Handles deck generation and shuffling.
+Has no dependency on FastAPI, so it can be called and tested without an HTTP context.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="services.blackjack.generate_deck">
 <span class="sig-prename descclassname"><span class="pre">services.blackjack.</span></span><span class="sig-name descname"><span class="pre">generate_deck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/services/blackjack.html#generate_deck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.blackjack.generate_deck" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list[dict]</p>
+<dd><p>Generate a standard 52-card deck and return it in shuffled order.</p>
+<p>Builds every combination of 4 suits (♠ ♥ ♦ ♣) and 13 ranks (2–A),
+then randomises the order with <code class="docutils literal notranslate"><span class="pre">random.shuffle</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>A shuffled list of 52 cards. Each card is a dict with:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>suit</strong> (str): Card suit, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;♠&quot;</span></code></p></li>
+<li><p><strong>rank</strong> (str): Card rank, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;A&quot;</span></code></p></li>
+</ul>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[dict]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">deck</span> <span class="o">=</span> <span class="n">generate_deck</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
+<span class="go">52</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">set</span><span class="p">(</span><span class="n">deck</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;suit&quot;</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">}</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
 <section id="module-services.minesweeper">
 <span id="minesweeper"></span><h2>Minesweeper<a class="headerlink" href="#module-services.minesweeper" title="Link to this heading">¶</a></h2>
+<p>Minesweeper business logic module.</p>
+<p>Handles mine placement with a guaranteed safe zone around the first click.
+Has no dependency on FastAPI, so it can be called and tested without an HTTP context.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="services.minesweeper.generate_mines">
 <span class="sig-prename descclassname"><span class="pre">services.minesweeper.</span></span><span class="sig-name descname"><span class="pre">generate_mines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mine_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/services/minesweeper.html#generate_mines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#services.minesweeper.generate_mines" title="Link to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Randomly place mines on a board while keeping the first-click area safe.</p>
+<p>A 3×3 zone centred on <code class="docutils literal notranslate"><span class="pre">(first_row,</span> <span class="pre">first_col)</span></code> is excluded from mine
+candidates, guaranteeing the player never hits a mine on the opening move.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rows</strong> (<em>int</em>)</p></li>
-<li><p><strong>cols</strong> (<em>int</em>)</p></li>
-<li><p><strong>mine_count</strong> (<em>int</em>)</p></li>
-<li><p><strong>first_row</strong> (<em>int</em>)</p></li>
-<li><p><strong>first_col</strong> (<em>int</em>)</p></li>
+<li><p><strong>rows</strong> (<em>int</em>) – Total number of rows on the board.</p></li>
+<li><p><strong>cols</strong> (<em>int</em>) – Total number of columns on the board.</p></li>
+<li><p><strong>mine_count</strong> (<em>int</em>) – Number of mines to place.</p></li>
+<li><p><strong>first_row</strong> (<em>int</em>) – Row index of the player’s first click.</p></li>
+<li><p><strong>first_col</strong> (<em>int</em>) – Column index of the player’s first click.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list[tuple[int, int]]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of <code class="docutils literal notranslate"><span class="pre">(row,</span> <span class="pre">col)</span></code> positions where mines
+are placed. Length equals <code class="docutils literal notranslate"><span class="pre">min(mine_count,</span> <span class="pre">available_cells)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[int, int]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mines</span> <span class="o">=</span> <span class="n">generate_mines</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">mines</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">in</span> <span class="n">mines</span>
+<span class="go">False</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

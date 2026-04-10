@@ -233,7 +233,13 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for services.minesweeper</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span></span><span class="sd">&quot;&quot;&quot;Minesweeper business logic module.</span>
+
+<span class="sd">Handles mine placement with a guaranteed safe zone around the first click.</span>
+<span class="sd">Has no dependency on FastAPI, so it can be called and tested without an HTTP context.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
 <span class="n">DIFFICULTIES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;easy&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>  <span class="s2">&quot;cols&quot;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>  <span class="s2">&quot;mine_count&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
@@ -247,7 +253,29 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_mines</span><span class="p">(</span>
     <span class="n">rows</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cols</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mine_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">first_row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">first_col</span><span class="p">:</span> <span class="nb">int</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-    <span class="c1"># Keep a 3×3 area around the first click mine-free</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Randomly place mines on a board while keeping the first-click area safe.</span>
+
+<span class="sd">    A 3×3 zone centred on ``(first_row, first_col)`` is excluded from mine</span>
+<span class="sd">    candidates, guaranteeing the player never hits a mine on the opening move.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rows (int): Total number of rows on the board.</span>
+<span class="sd">        cols (int): Total number of columns on the board.</span>
+<span class="sd">        mine_count (int): Number of mines to place.</span>
+<span class="sd">        first_row (int): Row index of the player&#39;s first click.</span>
+<span class="sd">        first_col (int): Column index of the player&#39;s first click.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[tuple[int, int]]: A list of ``(row, col)`` positions where mines</span>
+<span class="sd">        are placed. Length equals ``min(mine_count, available_cells)``.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; mines = generate_mines(9, 9, 10, 4, 4)</span>
+<span class="sd">        &gt;&gt;&gt; len(mines)</span>
+<span class="sd">        10</span>
+<span class="sd">        &gt;&gt;&gt; (4, 4) in mines</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">safe</span> <span class="o">=</span> <span class="p">{</span>
         <span class="p">(</span><span class="n">first_row</span> <span class="o">+</span> <span class="n">dr</span><span class="p">,</span> <span class="n">first_col</span> <span class="o">+</span> <span class="n">dc</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">dr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>

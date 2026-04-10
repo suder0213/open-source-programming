@@ -233,7 +233,13 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for services.blackjack</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span></span><span class="sd">&quot;&quot;&quot;Blackjack business logic module.</span>
+
+<span class="sd">Handles deck generation and shuffling.</span>
+<span class="sd">Has no dependency on FastAPI, so it can be called and tested without an HTTP context.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
 <span class="n">SUITS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;♠&quot;</span><span class="p">,</span> <span class="s2">&quot;♥&quot;</span><span class="p">,</span> <span class="s2">&quot;♦&quot;</span><span class="p">,</span> <span class="s2">&quot;♣&quot;</span><span class="p">]</span>
 <span class="n">RANKS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span> <span class="s2">&quot;J&quot;</span><span class="p">,</span> <span class="s2">&quot;Q&quot;</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">]</span>
@@ -242,6 +248,24 @@
 <div class="viewcode-block" id="generate_deck">
 <a class="viewcode-back" href="../../api/services.html#services.blackjack.generate_deck">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_deck</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a standard 52-card deck and return it in shuffled order.</span>
+
+<span class="sd">    Builds every combination of 4 suits (♠ ♥ ♦ ♣) and 13 ranks (2–A),</span>
+<span class="sd">    then randomises the order with ``random.shuffle``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dict]: A shuffled list of 52 cards. Each card is a dict with:</span>
+
+<span class="sd">            - **suit** (str): Card suit, e.g. ``&quot;♠&quot;``</span>
+<span class="sd">            - **rank** (str): Card rank, e.g. ``&quot;A&quot;``</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; deck = generate_deck()</span>
+<span class="sd">        &gt;&gt;&gt; len(deck)</span>
+<span class="sd">        52</span>
+<span class="sd">        &gt;&gt;&gt; set(deck[0].keys()) == {&quot;suit&quot;, &quot;rank&quot;}</span>
+<span class="sd">        True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">deck</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;suit&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="s2">&quot;rank&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">}</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">SUITS</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">RANKS</span><span class="p">]</span>
     <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deck</span></div>
